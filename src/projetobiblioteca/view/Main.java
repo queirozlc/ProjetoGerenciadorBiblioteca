@@ -6,16 +6,18 @@ import java.util.Scanner;
 
 import projetobiblioteca.controller.CriarContaController;
 import projetobiblioteca.controller.LoginController;
+import projetobiblioteca.controller.MenuPrincipalController;
 import projetobiblioteca.model.Funcionario;
+import projetobiblioteca.model.Livro;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		char opcaoEscolhida;
+		char opcaoEscolhida, opcaoEscolhidaMenu = '0';
 		Scanner scanner = new Scanner(System.in);
 		LoginController loginController = new LoginController();
 		CriarContaController criarContaController = new CriarContaController();
-		
+		MenuPrincipalController menuPrincipalController = new MenuPrincipalController();
 		
 		// Menu Login e Criar conta
 		do {
@@ -28,6 +30,7 @@ public class Main {
 			scanner.nextLine();
 			
 			switch (opcaoEscolhida) {
+			// Login
 			case '1':
 
 				System.out.println("============ MENU DE LOGIN ============");
@@ -41,50 +44,39 @@ public class Main {
 					System.out.println("Login feito com sucesso !");
 					// muda opçao escolhida para sair do while
 					opcaoEscolhida = '0';
+					opcaoEscolhidaMenu = '1';
+				
+				}else if (usuario.isEmpty()) {
+					System.out.println("Preencha o campo usuário !");
+				
+				}else if (senha.isEmpty()) {
+					System.out.println("Preencha o campo senha !");
+					
+				}else if (usuario.isEmpty() && senha.isEmpty()) {
+					System.out.println("Preencha todos os campos!");
 				}
 				
 				break;
-
+				
+				
+			// Criar conta
 			case '2':
 				// Entrada de dados
 				System.out.println("============ MENU DE CADASTRO ============");
 				try {
-					System.out.print("Informe a matricula: ");
-					int matricula = scanner.nextInt();
-					
-					System.out.print("Informe o nome: ");
-					scanner.nextLine();
-					String nome = scanner.nextLine();
-					
-					System.out.print("Informe o endereço: ");
-					String endereco = scanner.nextLine();
-
-					System.out.print("Informe a data de ingresso (formato dd/MM/yyyy): ");
-					String dataIngresso = scanner.nextLine();
-
-					System.out.print("Informe o login: ");
-					String login = scanner.nextLine();
-
-					System.out.print("Informe a senha: ");
-					String senhaCadastro = scanner.nextLine();
-
-					System.out.print("Informe o setor: ");
-					String setor = scanner.nextLine();
-
-					// Instanciando classe modelo
-					Funcionario funcionario = new Funcionario(matricula, nome, endereco, dataIngresso, login,
-							senhaCadastro, setor);
-
+					Funcionario funcionario = (Funcionario) criarContaController.getHelper().buscarModelo();
 					// Chamando metodo do controller
 					if (criarContaController.criarConta(funcionario)) {
 						System.out.println("-----------------------------------------------------");
 						System.out.println("Funcionário cadastrado com sucesso !");
 						// muda opçao escolhida para sair do while
 						opcaoEscolhida = '0';
+						opcaoEscolhidaMenu = '1';
 					}
 				} catch (InputMismatchException e) {
 					System.out.println("Algum campo está inválido, tente novamente");
 					scanner.nextLine();
+				
 				}
 				break;
 
@@ -97,14 +89,58 @@ public class Main {
 			}
 		} while (opcaoEscolhida != '0');
 		
-		
 		// Menu Principal
-		do {
+		
+		
+		while (opcaoEscolhidaMenu != '0') {
+			System.out.println("############# MENU PRINCIPAL #############");
+			System.out.println("0 - Sair do programa.");
+			System.out.println("1 - Cadastrar Item.");
+			System.out.println("2 - Cadastrar Usuário.");
+			System.out.println("3 - Realizar Empréstimo.");
+			System.out.println("4 - Emitir Relatórios.");
+			System.out.println("6 - Fazer devolução.");
+			System.out.print("Informe opção escolhida: ");
+			opcaoEscolhidaMenu = scanner.next().charAt(0);
 			
+			switch (opcaoEscolhidaMenu) {
 			
-			
-		} while (opcaoEscolhida != '0');
-
+			case '1':
+				// Definindo se o item cadastrado será livro ou se será um periódico
+				char escolhaItem = '0'; 
+				System.out.print("Informe 1 se o item for Livro ou 2 se for periódico: ");
+				escolhaItem = scanner.next().charAt(0);
+				
+				if (escolhaItem == '1') {
+					// busca livro
+					Livro livro = (Livro) menuPrincipalController.getHelper().buscarModelo();
+					
+					// cadastra livro
+					if (menuPrincipalController.cadastraItem(livro)) {
+						System.out.println("-----------------------------------------------------");
+						System.out.println("Livro Cadastrado com sucesso !");
+					}
+				
+				}else if (escolhaItem == '2') {
+					
+				
+				}else {
+					System.out.println("Opção inválida, tente novamente");
+					break;
+				}
+				break;
+				
+			case '2':
+				
+				break;
+				
+			case '0':
+				System.out.print("Finalizando programa...");
+				break;
+			default:
+				System.out.println("Essa opção é inválida, tente novamente.");
+			}
+		}
 		scanner.close();
 	}
 

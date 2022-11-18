@@ -39,4 +39,8 @@ public class CriarContaController {
 		}
 			return false;
 	}
+
+	public CriarContaHelper getHelper() {
+		return helper;
+	}
 }

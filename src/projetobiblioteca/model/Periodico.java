@@ -4,8 +4,6 @@
  */
 package projetobiblioteca.model;
 
-import java.util.List;
-
 /**
  *
  * @author Lucas
@@ -14,7 +12,7 @@ public class Periodico extends GenericBiblioteca{
     
     private Double fatorImpaco;
 
-    public Periodico(int id, List<String> autores, String titulo, char tipo, String issn, String fatorImpaco) {
+    public Periodico(int id, String autores, String titulo, char tipo, String issn, String fatorImpaco) {
         super(id, autores, titulo, tipo, issn);
         this.fatorImpaco = Double.valueOf(fatorImpaco);
     }

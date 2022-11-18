@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package projetobiblioteca.DAO;
 
 import java.io.BufferedReader;
@@ -123,7 +120,7 @@ public class FuncionarioDAO implements IDAO {
             
             while (linha != null) {
                 
-                String[] linhaSplit = linha.split(",");
+                String[] linhaSplit = linha.split(";");
                 loginBanco = linhaSplit[4];
                 senhaBanco = linhaSplit[5];
                 

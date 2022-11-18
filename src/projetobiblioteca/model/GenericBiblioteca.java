@@ -4,6 +4,8 @@
  */
 package projetobiblioteca.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,14 +15,27 @@ import java.util.List;
 public abstract class GenericBiblioteca {
     
     protected int id;
-    protected List<String> autores;
+    protected List<String> autores = new ArrayList<String>();
     protected String titulo;
     protected char tipo;
     protected String issn;
+    
+    public GenericBiblioteca() {
+    	this.id = 0;
+    }
 
-    public GenericBiblioteca(int id, List<String> autores, String titulo, char tipo, String issn) {
+    public GenericBiblioteca(int id, String autores, String titulo, char tipo, String issn) {
         this.id = id;
-        this.autores = autores;
+        try {
+        	if (autores.contains(",")) {
+        		String[] autoresSplit = autores.trim().split(",");
+        		this.autores = Arrays.asList(autoresSplit);
+        	}else {
+        		this.autores.add(autores);
+        	}
+		} catch (Exception e) {
+			System.out.println("Formato de entrada inválido no campo 'autor'");
+		}
         this.titulo = titulo;
         this.tipo = tipo;
         this.issn = issn;
@@ -38,8 +53,17 @@ public abstract class GenericBiblioteca {
         return autores;
     }
 
-    public void setAutores(List<String> autores) {
-        this.autores = autores;
+    public void setAutores(String autores) {
+    	try {
+        	if (autores.contains(",")) {
+        		String[] autoresSplit = autores.trim().split(",");
+        		this.autores = Arrays.asList(autoresSplit);
+        	}else {
+        		this.autores.add(autores);
+        	}
+		} catch (Exception e) {
+			System.out.println("Formato de entrada inválido no campo 'autor'");
+		}
     }
 
     public String getTitulo() {
