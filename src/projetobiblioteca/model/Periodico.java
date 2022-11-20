@@ -12,9 +12,9 @@ public class Periodico extends GenericBiblioteca{
     
     private Double fatorImpaco;
 
-    public Periodico(int id, String autores, String titulo, char tipo, String issn, String fatorImpaco) {
+    public Periodico(int id, String autores, String titulo, char tipo, String issn, Double fatorImpaco) {
         super(id, autores, titulo, tipo, issn);
-        this.fatorImpaco = Double.valueOf(fatorImpaco);
+        this.fatorImpaco = fatorImpaco;
     }
 
     public Double getFatorImpaco() {

@@ -9,13 +9,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import projetobiblioteca.model.Livro;
-
-public class LivroDAO implements IDAO {
+public class PeriodicoDAO implements IDAO {
 
 	@Override
 	public void delete(int id) {
 		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -27,7 +26,7 @@ public class LivroDAO implements IDAO {
 	@Override
 	public void criaDatabase() throws IOException {
 		// busca diretorio onde está o projeto
-		File arquivo = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\livro.csv");
+		File arquivo = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\periodico.csv");
 		PrintWriter writer = null;
 
 		if (!arquivo.exists()) {
@@ -35,7 +34,7 @@ public class LivroDAO implements IDAO {
 			try {
 				FileWriter out = new FileWriter(arquivo, true);
 				writer = new PrintWriter(out);
-				writer.println("Id;Autores;Titulo;Editora;Tipo;Ano de Publicacao;Issn");
+				writer.println("Id;Autores;Titulo;Tipo;Fator de Impacto;Issn");
 
 			} catch (IOException e) {
 				System.out.println("Erro: " + e.getMessage());
@@ -44,37 +43,10 @@ public class LivroDAO implements IDAO {
 				writer.close();
 			}
 		}
-	}
-
-	public boolean insert(Livro livro) {
-		File arquivo = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\livro.csv");
-		PrintWriter writer = null;
-
-		if (arquivo.exists()) {
-
-			try {
-				FileWriter out = new FileWriter(arquivo, true);
-				writer = new PrintWriter(out);
-
-				writer.write(livro.getId() + ";" + livro.getAutores().toString().replace("[", "").replace("]", "").trim()
-						+ ";" + livro.getTitulo() + ";" + livro.getEditora() + ";" + livro.getTipo() + ";"
-						+ livro.getAnoPublicacaoFormatado() + ";" + livro.getIssn() + "\n");
-				writer.flush();
-				return true;
-			} catch (IOException e) {
-				System.out.println("Erro: " + e.getMessage());
-
-			} finally {
-				writer.close();
-			}
-
-		}
-
-		return false;
 	}
 
 	public int atualizaId() throws FileNotFoundException, IOException {
-		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\livro.csv");
+		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\periodico.csv");
 		int id = 0;
 		// valida se arquivo existe antes de tentar ler
 		if (file.exists()) {
@@ -91,7 +63,7 @@ public class LivroDAO implements IDAO {
 				}
 			}
 		}
-		
+
 		return ++id;
 	}
 

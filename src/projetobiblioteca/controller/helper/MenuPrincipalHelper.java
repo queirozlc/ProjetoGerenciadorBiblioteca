@@ -1,13 +1,12 @@
 package projetobiblioteca.controller.helper;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
-
-import javax.print.attribute.PrintJobAttribute;
 
 import projetobiblioteca.DAO.LivroDAO;
+import projetobiblioteca.DAO.PeriodicoDAO;
 import projetobiblioteca.model.Livro;
+import projetobiblioteca.model.Periodico;
+import projetobiblioteca.view.Main;
 
 /**
  *
@@ -16,9 +15,11 @@ import projetobiblioteca.model.Livro;
 public class MenuPrincipalHelper implements IHelper {
 
 	private final LivroDAO livroDAO;
-
+	private final PeriodicoDAO periodicoDAO;
+	
 	public MenuPrincipalHelper() {
 		this.livroDAO = new LivroDAO();
+		this.periodicoDAO = new PeriodicoDAO();
 	}
 
 	public boolean validaCampos(Object obj) {
@@ -34,52 +35,82 @@ public class MenuPrincipalHelper implements IHelper {
 					&& !((Livro) obj).getEditora().isEmpty() && ((Livro) obj).getTipo() == 'L'
 					|| ((Livro) obj).getTipo() == 'P';
 
+		}else if (obj instanceof Periodico) {
+			return ((Livro) obj).getId() != 0 && ((Livro) obj).getTitulo() != null
+					&& !((Livro) obj).getTitulo().isEmpty() && ((Livro) obj).getAutores() != null
+					&& !((Livro) obj).getAutores().isEmpty() && ((Livro) obj).getIssn() != null
+					&& !((Livro) obj).getIssn().isEmpty() && ((Livro) obj).getEditora() != null
+					&& !((Livro) obj).getEditora().isEmpty() && ((Livro) obj).getTipo() == 'L'
+					|| ((Livro) obj).getTipo() == 'P';
 		}
 		return false;
-	}
-
-	public int atualizaId() throws FileNotFoundException, IOException {
-		int ultimoId = this.livroDAO.verificaUltimoId();
-		ultimoId++;
-		return ultimoId;
 	}
 
 	@Override
 	public Object buscarModelo() {
 		Livro livro = null;
-		Scanner scanner = new Scanner(System.in);
 		try {
+
 			// Entrada de dados
 			System.out.print("Informe o titulo do livro: ");
-			String titulo = scanner.nextLine();
+			String titulo = Main.getScanner().nextLine();
 
 			System.out.print("Informe o(s) autor(es) do livro (Se houver mais de um, separar por vírgula): ");
-			String autor = scanner.nextLine();
+			String autor = Main.getScanner().nextLine();
 
 			System.out.print("Informe a editora: ");
-			String editora = scanner.nextLine();
+			String editora = Main.getScanner().nextLine();
 
 			System.out.print("Informe o tipo (L para livro ou P para periódico): ");
-			char tipo = scanner.next().toUpperCase().charAt(0);
+			char tipo = Main.getScanner().next().toUpperCase().charAt(0);
 
 			System.out.print("Informe o ano de publicação (formato yyyy): ");
-			scanner.nextLine();
-			String anoPublicacao = scanner.nextLine();
+			Main.getScanner().nextLine();
+			String anoPublicacao = Main.getScanner().nextLine();
 
 			System.out.print("Informe o ISSN do livro: ");
-			String issn = scanner.nextLine();
+			String issn = Main.getScanner().nextLine();
 
-			
 			// instancia classe modelo e seta propriedades
-			livro = new Livro(this.atualizaId(), autor, titulo, tipo, issn, editora, anoPublicacao);
-			
-		} catch (Exception e) {
+			livro = new Livro(livroDAO.atualizaId(), autor, titulo, tipo, issn, editora, anoPublicacao);
+
+			return livro;
+
+		} catch (IOException e) {
 			e.printStackTrace();
-		}finally {
-			scanner.close();
+
 		}
 		
 		return livro;
 	}
-
+	
+	public Periodico buscarModeloPeriodico() {
+		Periodico periodico = null;
+		
+		try {
+			// Entrada de dados
+			System.out.print("Informe o(s) autor(es) do periodico (Se houver mais de um, separar por vírgula): ");
+			String autor = Main.getScanner().nextLine();
+			
+			System.out.print("Informe o titulo do periodico: ");
+			String titulo = Main.getScanner().nextLine();
+			
+			System.out.print("Informe o tipo (R para revistas ou P para periódicos): ");
+			char tipo = Main.getScanner().next().toUpperCase().charAt(0);
+			
+			System.out.print("Informe o fator de impacto do periódico: ");
+			Double fatorImpacto = Main.getScanner().nextDouble();
+			
+			System.out.print("Informe o ISSN do periodico: ");
+			String issn = Main.getScanner().nextLine();
+			
+			periodico = new Periodico(periodicoDAO.atualizaId(), autor, titulo, tipo, issn, fatorImpacto);
+			
+		} catch (IOException e) {
+			e.getMessage();
+		}
+		
+		return periodico;
+	}
+	
 }

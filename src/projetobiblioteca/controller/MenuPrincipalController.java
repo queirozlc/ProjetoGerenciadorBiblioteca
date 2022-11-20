@@ -1,10 +1,10 @@
 
 package projetobiblioteca.controller;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import projetobiblioteca.DAO.LivroDAO;
+import projetobiblioteca.DAO.PeriodicoDAO;
 import projetobiblioteca.controller.helper.MenuPrincipalHelper;
 import projetobiblioteca.model.Livro;
 import projetobiblioteca.model.Periodico;
@@ -16,10 +16,12 @@ public class MenuPrincipalController {
     
     private final MenuPrincipalHelper helper;
     private final LivroDAO livroDAO;
-
+    private final PeriodicoDAO periodicoDAO;
+    
     public MenuPrincipalController() {
         this.helper = new MenuPrincipalHelper();
 		this.livroDAO = new LivroDAO();
+		this.periodicoDAO = new PeriodicoDAO();
     }
 
     public MenuPrincipalHelper getHelper() {
@@ -30,6 +32,7 @@ public class MenuPrincipalController {
 	public boolean cadastraItem(Object item) throws IOException {
 		
 		livroDAO.criaDatabase();
+		periodicoDAO.criaDatabase();
 		
 		if (item instanceof Livro) {
 			
@@ -41,6 +44,8 @@ public class MenuPrincipalController {
 			}
 			
 		} else if (item instanceof Periodico) {
+			
+			
 			
 		}
 		

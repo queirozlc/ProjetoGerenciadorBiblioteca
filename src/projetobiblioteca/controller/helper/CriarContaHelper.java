@@ -1,14 +1,13 @@
 package projetobiblioteca.controller.helper;
 
-import java.util.Scanner;
-
 import projetobiblioteca.model.Funcionario;
+import projetobiblioteca.view.Main;
 
 /**
  *
  * @author Lucas
  */
-public class CriarContaHelper implements IHelper{
+public class CriarContaHelper implements IHelper {
 
 	public boolean validaCampos(Funcionario funcionario) {
 		if (funcionario != null) {
@@ -22,35 +21,36 @@ public class CriarContaHelper implements IHelper{
 
 		return false;
 	}
-	
+
 	@Override
 	public Object buscarModelo() {
-		Scanner scanner = new Scanner(System.in);
+		Funcionario funcionario = null;
+
 		System.out.print("Informe a matricula: ");
-		int matricula = scanner.nextInt();
-		
+		int matricula = Main.getScanner().nextInt();
+
 		System.out.print("Informe o nome: ");
-		scanner.nextLine();
-		String nome = scanner.nextLine();
-		
+		Main.getScanner().nextLine();
+		String nome = Main.getScanner().nextLine();
+
 		System.out.print("Informe o endereço: ");
-		String endereco = scanner.nextLine();
+		String endereco = Main.getScanner().nextLine();
 
 		System.out.print("Informe a data de ingresso (formato dd/MM/yyyy): ");
-		String dataIngresso = scanner.nextLine();
+		String dataIngresso = Main.getScanner().nextLine();
 
 		System.out.print("Informe o login: ");
-		String login = scanner.nextLine();
+		String login = Main.getScanner().nextLine();
 
 		System.out.print("Informe a senha: ");
-		String senhaCadastro = scanner.nextLine();
+		String senhaCadastro = Main.getScanner().nextLine();
 
 		System.out.print("Informe o setor: ");
-		String setor = scanner.nextLine();
+		String setor = Main.getScanner().nextLine();
 
 		// Instanciando classe modelo
-		Funcionario funcionario = new Funcionario(matricula, nome, endereco, dataIngresso, login, senhaCadastro, setor);
-		
+		funcionario = new Funcionario(matricula, nome, endereco, dataIngresso, login, senhaCadastro, setor);
+
 		return funcionario;
 	}
 }
