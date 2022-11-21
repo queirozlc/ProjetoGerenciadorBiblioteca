@@ -9,36 +9,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import projetobiblioteca.model.Periodico;
+import projetobiblioteca.model.Professor;
 
-public class PeriodicoDAO implements IDAO {
-
-	public boolean insert(Periodico periodico) {
-		File arquivo = new File(
-				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\periodico.csv");
-		PrintWriter writer = null;
-
-		if (arquivo.exists()) {
-
-			try {
-				FileWriter out = new FileWriter(arquivo, true);
-				writer = new PrintWriter(out);
-
-				writer.write(periodico.getId() + ";" + periodico.getAutores().toString().replace("[", "").replace("]", "").trim() + ";" + periodico.getTitulo() + ";"
-						+ periodico.getTipo() + ";" + periodico.getFatorImpaco() + ";" + periodico.getIssn() + "\n");
-				writer.flush();
-				return true;
-			} catch (Exception e) {
-				e.getMessage();
-			
-			} finally {
-				writer.close();
-			}
-
-		}
-
-		return false;
-	}
+public class ProfessorDAO implements IDAO {
 
 	@Override
 	public void delete(int id) {
@@ -56,7 +29,7 @@ public class PeriodicoDAO implements IDAO {
 	public void criaDatabase() throws IOException {
 		// busca diretorio onde está o projeto
 		File arquivo = new File(
-				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\periodico.csv");
+				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\professor.csv");
 		PrintWriter writer = null;
 
 		if (!arquivo.exists()) {
@@ -64,7 +37,7 @@ public class PeriodicoDAO implements IDAO {
 			try {
 				FileWriter out = new FileWriter(arquivo, true);
 				writer = new PrintWriter(out);
-				writer.println("Id;Autores;Titulo;Tipo;Fator de Impacto;Issn");
+				writer.println("Matricula;Nome;Endereco;Data de Ingresso;Setor");
 
 			} catch (IOException e) {
 				System.out.println("Erro: " + e.getMessage());
@@ -73,28 +46,55 @@ public class PeriodicoDAO implements IDAO {
 				writer.close();
 			}
 		}
+
 	}
 
-	public int atualizaId() throws FileNotFoundException, IOException {
-		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\periodico.csv");
+	public int atualizaMatricula() throws FileNotFoundException, IOException {
+		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\professor.csv");
 		int id = 0;
-		// valida se arquivo existe antes de tentar ler
+
 		if (file.exists()) {
+
 			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
 				String linha = reader.readLine();
 				linha = reader.readLine();
 
 				while (linha != null) {
-
 					String[] linhaSplit = linha.split(";");
 					id = Integer.parseInt(linhaSplit[0]);
 					linha = reader.readLine();
 				}
 			}
+
 		}
 
 		return ++id;
+	}
+
+	public boolean insert(Professor professor) {
+		File arquivo = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\professor.csv");
+		PrintWriter writer = null;
+
+		if (arquivo.exists()) {
+			try {
+				FileWriter out = new FileWriter(arquivo, true);
+				writer = new PrintWriter(out);
+
+				writer.write(professor.getMatricula() + ";" + professor.getNome() + ";" + professor.getEndereco() + ";"
+						+ professor.getDataFormatada() + ";" + professor.getSetor() + "\n");
+				writer.flush();
+				return true;
+			} catch (Exception e) {
+				System.out.println("Erro: " + e.getMessage());
+			
+			}finally {
+				writer.close();
+			}
+
+		}
+
+		return false;
 	}
 
 }

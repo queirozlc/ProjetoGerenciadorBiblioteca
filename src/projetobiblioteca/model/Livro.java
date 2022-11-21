@@ -25,7 +25,7 @@ public class Livro extends GenericBiblioteca {
 		try {
 			this.anoPublicacao = new SimpleDateFormat("yyyy").parse(anoPublicacao);
 		} catch (ParseException e) {
-			System.out.println("Formato de data inválido, tente novamente.");
+			System.out.println("Formato de data inválido, Erro: " + e.getMessage());
 		}
 	}
 

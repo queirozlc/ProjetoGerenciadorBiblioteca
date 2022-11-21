@@ -2,6 +2,7 @@ package projetobiblioteca.view;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -11,10 +12,12 @@ import projetobiblioteca.controller.MenuPrincipalController;
 import projetobiblioteca.model.Funcionario;
 import projetobiblioteca.model.Livro;
 import projetobiblioteca.model.Periodico;
+import projetobiblioteca.model.Professor;
 
 public class Main {
 
-	private static Scanner scanner = new Scanner(System.in);
+	private static final Locale localePtBr = new Locale("pt", "BR");
+	private static Scanner scanner = new Scanner(System.in).useLocale(localePtBr);
 
 	public static void main(String[] args) throws IOException {
 		Funcionario funcionario = null;
@@ -46,8 +49,8 @@ public class Main {
 					// muda opçao escolhida para sair do while
 					opcaoEscolhida = '0';
 					opcaoEscolhidaMenu = '1';
-				} 
-				
+				}
+
 				loginController.getHelper().validaCampos(funcionario.getLogin(), funcionario.getSenha());
 				break;
 
@@ -99,11 +102,11 @@ public class Main {
 					System.out.print("Informe 1 se o item for Livro ou 2 se for periódico: ");
 					escolhaItem = scanner.next().charAt(0);
 					scanner.nextLine();
-					
+
 					// Escolha de livro
 					if (escolhaItem == '1') {
 						// busca livro
-						Livro livro = (Livro) menuPrincipalController.getHelper().buscarModelo();
+						Livro livro = (Livro) menuPrincipalController.getHelper().buscarModeloLivro();
 
 						// cadastra livro
 						if (menuPrincipalController.cadastraItem(livro)) {
@@ -113,23 +116,41 @@ public class Main {
 
 						// Escolha de periódico
 					} else if (escolhaItem == '2') {
-						
+
 						// busca periodico
 						Periodico periodico = menuPrincipalController.getHelper().buscarModeloPeriodico();
-						
-						if(menuPrincipalController.cadastraItem(periodico)) {
+
+						if (menuPrincipalController.cadastraItem(periodico)) {
 							System.out.println("-----------------------------------------------------");
 							System.out.println("Periódico Cadastrado com sucesso !");
 						}
-						
+
 					} else {
 						System.out.println("Opção inválida, tente novamente");
 						break;
 					}
 					break;
 
+				// Cadastrando usuário
 				case 2:
-
+					// Valida o usuário a ser cadastrado
+					int escolhaUsuario;
+					
+					System.out.print("Digite 1 se o usuário for professor ou 2 se o usuário for aluno: ");
+					escolhaUsuario = scanner.nextInt();
+					scanner.nextLine();
+					
+					// cadastro de professor
+					if (escolhaUsuario == 1) {
+						
+						// busca modelo da tela
+						Professor professor = (Professor) menuPrincipalController.getHelper().buscarModeloUsuario(escolhaUsuario);
+						
+						if (menuPrincipalController.cadastraUsuario(professor)) {
+							System.out.println("-----------------------------------------------------");
+							System.out.println("Professor Cadastrado com sucesso !");
+						}
+					}
 					break;
 
 				case 0:
@@ -140,18 +161,20 @@ public class Main {
 				}
 			} catch (InputMismatchException e) {
 				System.out.println("Valor inválido para opção escolhida");
+				scanner.nextLine();
 
 			} catch (NoSuchElementException e) {
 				System.out.println(e.getMessage());
+				scanner.nextLine();
 			}
 
 		} while (opcaoEscolhidaMenu != 0);
-		
+
 		scanner.close();
 	}
 
 	public static Scanner getScanner() {
 		return scanner;
 	}
-	
+
 }
