@@ -26,7 +26,7 @@ public class CriarContaController {
 
 		// valida os campos e se matricula ou login cadastrados ja existem
 		if (this.helper.validaCampos(funcionario)
-				&& !funcionarioDAO.verificaMatriculaELogin(funcionario.getMatricula(), funcionario.getLogin())) {
+				&& !funcionarioDAO.verificaLogin(funcionario.getLogin())) {
 			this.funcionarioDAO.insert(funcionario);
 			return true;
 
@@ -34,8 +34,8 @@ public class CriarContaController {
 			System.out.println("Preencha todos os campos !");
 
 		} else if (this.helper.validaCampos(funcionario)
-				&& funcionarioDAO.verificaMatriculaELogin(funcionario.getMatricula(), funcionario.getLogin())) {
-			System.out.println("Login ou matricula ja existem !");
+				&& funcionarioDAO.verificaLogin(funcionario.getLogin())) {
+			System.out.println("Login ja existe !");
 		}
 			return false;
 	}

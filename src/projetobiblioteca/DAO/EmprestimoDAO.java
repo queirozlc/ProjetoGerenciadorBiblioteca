@@ -9,13 +9,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import projetobiblioteca.model.Livro;
+import projetobiblioteca.model.Emprestimo;
 
-public class LivroDAO implements IDAO<Livro> {
-
+public class EmprestimoDAO implements IDAO<Emprestimo> {
 
 	@Override
-	public List<Livro> selectAll() {
+	public List<Emprestimo> selectAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -23,7 +22,8 @@ public class LivroDAO implements IDAO<Livro> {
 	@Override
 	public void criaDatabase() throws IOException {
 		// busca diretorio onde está o projeto
-		File arquivo = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\livro.csv");
+		File arquivo = new File(
+				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\emprestimo.csv");
 		PrintWriter writer = null;
 
 		if (!arquivo.exists()) {
@@ -31,7 +31,8 @@ public class LivroDAO implements IDAO<Livro> {
 			try {
 				FileWriter out = new FileWriter(arquivo, true);
 				writer = new PrintWriter(out);
-				writer.println("Id;Autores;Titulo;Editora;Tipo;Ano de Publicacao;Issn");
+				writer.println(
+						"Id;Matricula do Cliente;Matricula do Funcionário;Data de Empréstimo;Data de devolução;");
 
 			} catch (IOException e) {
 				System.out.println("Erro: " + e.getMessage());
@@ -41,54 +42,58 @@ public class LivroDAO implements IDAO<Livro> {
 			}
 		}
 	}
-	
+
 	@Override
-	public boolean insert(Livro livro) {
-		File arquivo = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\livro.csv");
+	public boolean insert(Emprestimo emprestimo) {
+		File file = new File(
+				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\emprestimo.csv");
 		PrintWriter writer = null;
 
-		if (arquivo.exists()) {
-
+		if (file.exists()) {
 			try {
-				FileWriter out = new FileWriter(arquivo, true);
+				FileWriter out = new FileWriter(file, true);
 				writer = new PrintWriter(out);
 
-				writer.write(livro.getId() + ";" + livro.getAutores().toString().replace("[", "").replace("]", "").trim()
-						+ ";" + livro.getTitulo() + ";" + livro.getEditora() + ";" + livro.getTipo() + ";"
-						+ livro.getAnoPublicacaoFormatado() + ";" + livro.getIssn() + "\n");
+				writer.write(emprestimo.getId() + ";" + emprestimo.getMatriculaCliente() + ";"
+						+ emprestimo.getMatriculaFuncionario() + ";" + emprestimo.getDataEmprestimoFormatada() + ";"
+						+ emprestimo.getDataDevolucaoFormatada() + "\n");
 				writer.flush();
+				
 				return true;
-			} catch (IOException e) {
-				System.out.println("Erro: " + e.getMessage());
-
-			} finally {
+			} catch (Exception e) {
+				e.printStackTrace();
+			
+			}finally {
 				writer.close();
 			}
-
 		}
-
 		return false;
 	}
 
+	@Override
 	public int atualizaId() throws FileNotFoundException, IOException {
-		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\livro.csv");
+		File file = new File(
+				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\emprestimo.csv");
 		int id = 0;
-		// valida se arquivo existe antes de tentar ler
-		if (file.exists()) {
-			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
+		if (file.exists()) {
+
+			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 				String linha = reader.readLine();
 				linha = reader.readLine();
 
 				while (linha != null) {
-
 					String[] linhaSplit = linha.split(";");
 					id = Integer.parseInt(linhaSplit[0]);
 					linha = reader.readLine();
 				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		}
-		
+
 		return ++id;
 	}
 

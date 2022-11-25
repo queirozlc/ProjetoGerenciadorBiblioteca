@@ -1,5 +1,6 @@
 package projetobiblioteca.controller.helper;
 
+import projetobiblioteca.DAO.FuncionarioDAO;
 import projetobiblioteca.model.Funcionario;
 import projetobiblioteca.view.Main;
 
@@ -9,14 +10,21 @@ import projetobiblioteca.view.Main;
  */
 public class CriarContaHelper implements IHelper {
 
-	public boolean validaCampos(Funcionario funcionario) {
-		if (funcionario != null) {
-			return funcionario.getMatricula() != 0 && funcionario.getNome() != null && !funcionario.getNome().isEmpty()
-					&& funcionario.getEndereco() != null && !funcionario.getEndereco().isEmpty()
-					&& funcionario.getDataFormatada() != null && funcionario.getLogin() != null
-					&& !funcionario.getLogin().isEmpty() && funcionario.getSenha() != null
-					&& !funcionario.getSenha().isEmpty() && funcionario.getSetor() != null
-					&& !funcionario.getSetor().isEmpty();
+	private final FuncionarioDAO funcionarioDAO;
+
+	public CriarContaHelper() {
+		this.funcionarioDAO = new FuncionarioDAO();
+	}
+
+	
+	public boolean validaCampos(Object obj) {
+		if (((Funcionario) obj) != null) {
+			return ((Funcionario) obj).getMatricula() != 0 && ((Funcionario) obj).getNome() != null
+					&& !((Funcionario) obj).getNome().isEmpty() && ((Funcionario) obj).getEndereco() != null
+					&& !((Funcionario) obj).getEndereco().isEmpty() && ((Funcionario) obj).getDataFormatada() != null
+					&& ((Funcionario) obj).getLogin() != null && !((Funcionario) obj).getLogin().isEmpty()
+					&& ((Funcionario) obj).getSenha() != null && !((Funcionario) obj).getSenha().isEmpty()
+					&& ((Funcionario) obj).getSetor() != null && !((Funcionario) obj).getSetor().isEmpty();
 		}
 
 		return false;
@@ -25,31 +33,34 @@ public class CriarContaHelper implements IHelper {
 	@Override
 	public Object buscarModelo() {
 		Funcionario funcionario = null;
+		try {
+			System.out.print("Informe o nome do funcionário: ");
+			String nome = Main.getScanner().nextLine();
 
-		System.out.print("Informe a matricula: ");
-		int matricula = Main.getScanner().nextInt();
+			System.out.print("Informe o endereço do funcionário: ");
+			String endereco = Main.getScanner().nextLine();
 
-		System.out.print("Informe o nome: ");
-		Main.getScanner().nextLine();
-		String nome = Main.getScanner().nextLine();
+			System.out.print("Informe a data de ingresso do funcionário (formato dd/MM/yyyy): ");
+			String dataIngresso = Main.getScanner().nextLine();
 
-		System.out.print("Informe o endereço: ");
-		String endereco = Main.getScanner().nextLine();
+			System.out.print("Informe o login do funcionário: ");
+			String login = Main.getScanner().nextLine();
 
-		System.out.print("Informe a data de ingresso (formato dd/MM/yyyy): ");
-		String dataIngresso = Main.getScanner().nextLine();
+			System.out.print("Informe a senha do funcionário: ");
+			String senhaCadastro = Main.getScanner().nextLine();
 
-		System.out.print("Informe o login: ");
-		String login = Main.getScanner().nextLine();
+			System.out.print("Informe o setor do funcionário: ");
+			String setor = Main.getScanner().nextLine();
 
-		System.out.print("Informe a senha: ");
-		String senhaCadastro = Main.getScanner().nextLine();
+			// Instanciando classe modelo
+			funcionario = new Funcionario(this.funcionarioDAO.atualizaId(), nome, endereco, dataIngresso, login,
+					senhaCadastro, setor);
 
-		System.out.print("Informe o setor: ");
-		String setor = Main.getScanner().nextLine();
+			return funcionario;
 
-		// Instanciando classe modelo
-		funcionario = new Funcionario(matricula, nome, endereco, dataIngresso, login, senhaCadastro, setor);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return funcionario;
 	}

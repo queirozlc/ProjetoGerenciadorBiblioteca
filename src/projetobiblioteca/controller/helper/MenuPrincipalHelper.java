@@ -1,7 +1,7 @@
 package projetobiblioteca.controller.helper;
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.util.List;
 
 import projetobiblioteca.DAO.AlunoDAO;
 import projetobiblioteca.DAO.LivroDAO;
@@ -30,7 +30,8 @@ public class MenuPrincipalHelper {
 		this.professorDAO = new ProfessorDAO();
 		this.alunoDAO = new AlunoDAO();
 	}
-
+	
+	
 	public boolean validaCampos(Object obj) {
 
 		// verifica tipo do objeto
@@ -70,7 +71,7 @@ public class MenuPrincipalHelper {
 		return false;
 	}
 
-	public Object buscarModeloLivro() {
+	public Livro buscarModeloLivro() {
 		Livro livro = null;
 		try {
 
@@ -154,7 +155,7 @@ public class MenuPrincipalHelper {
 				System.out.print("Informe o setor do professor: ");
 				String setor = Main.getScanner().nextLine();
 
-				professor = new Professor(this.professorDAO.atualizaMatricula(), nome, endereco, dataIngresso, setor);
+				professor = new Professor(this.professorDAO.atualizaId(), nome, endereco, dataIngresso, setor);
 
 				return professor;
 			} else if (opcao == 2) {
@@ -171,10 +172,10 @@ public class MenuPrincipalHelper {
 				System.out.print("Informe o curso do aluno: ");
 				String curso = Main.getScanner().nextLine();
 
-				System.out.print("Informe a multa do aluno (informe 0 caso não tenha.): ");
+				System.out.print("Informe a multa do aluno (separado por vírgula e informe 0 caso não tenha.): ");
 				double multa = Main.getScanner().nextDouble();
 
-				aluno = new Aluno(this.alunoDAO.atualizaMatricula(), nome, endereco, dataIngresso, curso, multa);
+				aluno = new Aluno(this.alunoDAO.atualizaId(), nome, endereco, dataIngresso, curso, multa);
 
 				return aluno;
 			} else {
@@ -188,4 +189,39 @@ public class MenuPrincipalHelper {
 		return null;
 	}
 
+	public void listarUsuariosCadastrados(int opcao) {
+		
+		try {
+			if (opcao == 1) {
+				List<Professor> listaProfessores = professorDAO.selectAll();
+
+				if (listaProfessores != null && !listaProfessores.isEmpty()) {
+					System.out.println("\n############### LISTA DE PROFESSORES CADASTRADOS ###############");
+					for (Professor professor : listaProfessores) {
+						System.out.println("===================================================================");
+						System.out.println("Matrícula: " + professor.getMatricula());
+						System.out.println("Nome: " + professor.getNome());
+					}
+				}
+
+			} else if (opcao == 2) {
+				List<Aluno> listaAlunos = alunoDAO.selectAll();
+				
+				if (listaAlunos != null && !listaAlunos.isEmpty()) {
+					System.out.println("\n############### LISTA DE ALUNOS CADASTRADOS ###############");
+					
+					for (Aluno aluno : listaAlunos) {
+						System.out.println("===================================================================");
+						System.out.println("Matrícula: " + aluno.getMatricula());
+						System.out.println("Nome: " + aluno.getNome());
+					}
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("Erro: " + e.getMessage());
+		}
+
+	}
+	
+	
 }

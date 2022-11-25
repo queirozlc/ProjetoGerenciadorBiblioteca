@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package projetobiblioteca.model;
 
 import java.text.ParseException;
@@ -19,13 +16,16 @@ public class ItemEmprestimo{
     private int idLivro;
     private int idPeriodico;
     private Date dataDevolucao;
-
-    public ItemEmprestimo(int id, int idEmprestimo, int idLivro, int idPeriodico, Date dataDevolucao) {
+    
+	public ItemEmprestimo(int id, String dataDevolucao, int idEmprestimo, int idPeriodico) {
         this.id = id;
+        try {
+        	this.dataDevolucao = new SimpleDateFormat("dd/MM/yyyy").parse(dataDevolucao);
+        } catch (ParseException e) {
+        	e.printStackTrace();
+        }
         this.idEmprestimo = idEmprestimo;
-        this.idLivro = idLivro;
         this.idPeriodico = idPeriodico;
-        this.dataDevolucao = dataDevolucao;
     }
     
     public ItemEmprestimo(int id, int idEmprestimo, int idLivro, String dataDevolucao) {

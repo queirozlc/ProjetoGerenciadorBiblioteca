@@ -16,127 +16,183 @@ import projetobiblioteca.model.Funcionario;
  *
  * @author Lucas
  */
-public class FuncionarioDAO implements IDAO {
+public class FuncionarioDAO implements IDAO<Funcionario> {
 
-    @Override
-    public void criaDatabase() throws IOException {
-        // busca diretorio onde está o projeto
-        File arquivo = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\funcionarios.csv");
-        PrintWriter writer = null;
+	@Override
+	public void criaDatabase() throws IOException {
+		// busca diretorio onde está o projeto
+		File arquivo = new File(
+				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\funcionarios.csv");
+		PrintWriter writer = null;
 
-        if (!arquivo.exists()) {
-            arquivo.createNewFile();
-            try {
-                FileWriter out = new FileWriter(arquivo, true);
-                writer = new PrintWriter(out);
-                writer.println("Matricula;Nome;Endereco;Data Ingresso;Login;Senha;Setor");
+		if (!arquivo.exists()) {
+			arquivo.createNewFile();
+			try {
+				FileWriter out = new FileWriter(arquivo, true);
+				writer = new PrintWriter(out);
+				writer.println("Matricula;Nome;Endereco;Data Ingresso;Login;Senha;Setor");
 
-            } catch (IOException e) {
-                System.out.println("Erro: " + e.getMessage());
+			} catch (IOException e) {
+				System.out.println("Erro: " + e.getMessage());
 
-            } finally {
-                writer.close();
-            }
-        }
+			} finally {
+				writer.close();
+			}
+		}
 
-    }
+	}
+	
+	@Override
+	public boolean insert(Funcionario funcionario) {
+		File arquivo = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\funcionarios.csv");
+		PrintWriter writer = null;
 
-    public void insert(Funcionario funcionario) {
-        File arquivo = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\funcionarios.csv");
-        PrintWriter writer = null;
+		if (arquivo.exists()) {
 
-        if (arquivo.exists()) {
+			try {
+				FileWriter out = new FileWriter(arquivo, true);
+				writer = new PrintWriter(out);
 
-            try {
-                FileWriter out = new FileWriter(arquivo, true);
-                writer = new PrintWriter(out);
+				writer.write(funcionario.getMatricula() + ";" + funcionario.getNome() + ";" + funcionario.getEndereco()
+						+ ";" + funcionario.getDataFormatada() + ";" + funcionario.getLogin() + ";"
+						+ funcionario.getSenha() + ";" + funcionario.getSetor() + "\n");
+				writer.flush();
+				
+				return true;
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
 
-                writer.write(funcionario.getMatricula() + ";" + funcionario.getNome() + ";" + funcionario.getEndereco() + ";" + funcionario.getDataFormatada() + ";" + funcionario.getLogin() + ";" + funcionario.getSenha() + ";" + funcionario.getSetor() + "\n");
-                writer.flush();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+			} finally {
+				writer.close();
+			}
+		}
+		
+		return false;
+	}
 
-            } finally {
-                writer.close();
-            }
+	@Override
+	public List<Funcionario> selectAll() {
+		return null;
+	}
 
-        }
-    }
+	public boolean verificaLogin(String loginAComparar) throws FileNotFoundException, IOException {
+		File file = new File(
+				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\funcionarios.csv");
+		String login;
 
-    @Override
-    public void delete(int id) {
+		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
-    }
+			String linha = reader.readLine();
+			linha = reader.readLine();
 
-    public void update(Funcionario funcionario) {
+			while (linha != null) {
+				String[] linhaSplit = linha.split(";");
+				login = linhaSplit[4];
+				if (login.equalsIgnoreCase(loginAComparar)) {
+					return true;
+				}
+				linha = reader.readLine();
+			}
 
-    }
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 
-    @Override
-    public List<Object> selectAll() {
-        return null;
-    }
+		return false;
+	}
 
-    public boolean verificaMatriculaELogin(int matriculaAComparar, String loginAComparar) throws FileNotFoundException, IOException {
-        File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\funcionarios.csv");
-        int matricula = 0;
-        String login = "";
-        
-        try ( BufferedReader reader = new BufferedReader(new FileReader(file))) {
+	public boolean pesquisarPorLoginESenha(String login, String senha) {
+		File file = new File(
+				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\funcionarios.csv");
 
-            String linha = reader.readLine();
-            linha = reader.readLine();
-            
-            
-            while (linha != null) {
-                String[] linhaSplit = linha.split(";");
+		if (file.exists()) {
+			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+				String loginBanco, senhaBanco;
+				String linha = reader.readLine();
+				linha = reader.readLine();
 
-                matricula = Integer.parseInt(linhaSplit[0]);
-                login = linhaSplit[4];
+				while (linha != null) {
 
-                if (matricula == matriculaAComparar || login.equalsIgnoreCase(loginAComparar)) {
-                    return true;
-                }
-                
-                linha = reader.readLine();
-            }
+					String[] linhaSplit = linha.split(";");
+					loginBanco = linhaSplit[4];
+					senhaBanco = linhaSplit[5];
 
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+					if (loginBanco.equalsIgnoreCase(login) && senhaBanco.equalsIgnoreCase(senha)) {
+						return true;
+					}
 
-        return false;
-    }
-    
-    
-    
-    public boolean pesquisarPorLoginESenha(String login, String senha) {
-        File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\funcionarios.csv");
-        
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String loginBanco, senhaBanco;
-            String linha = reader.readLine();
-            linha = reader.readLine();
-            
-            while (linha != null) {
-                
-                String[] linhaSplit = linha.split(";");
-                loginBanco = linhaSplit[4];
-                senhaBanco = linhaSplit[5];
-                
-                if (loginBanco.equalsIgnoreCase(login) && senhaBanco.equalsIgnoreCase(senha)) {
-                    return true;
-                }
-                
-                linha = reader.readLine();
-            }
-            
-        }catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-        
-        return false;
-    }
+					linha = reader.readLine();
+				}
+
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+
+		return false;
+	}
+
+	public Funcionario buscaUsuarioPorLoginESenha(String login, String senha) {
+		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\funcionarios.csv");
+		Funcionario funcionario = new Funcionario();
+		String loginBanco, senhaBanco;
+
+		if (file.exists()) {
+
+			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+				String linha = reader.readLine();
+				linha = reader.readLine();
+
+				while (linha != null) {
+					String[] linhaSplit = linha.split(";");
+					loginBanco = linhaSplit[4];
+					senhaBanco = linhaSplit[5];
+
+					if (login.equalsIgnoreCase(loginBanco) && senha.equals(senhaBanco)) {
+						funcionario.setMatricula(Integer.parseInt(linhaSplit[0]));
+						funcionario.setNome(linhaSplit[1]);
+						funcionario.setEndereco(linhaSplit[2]);
+						funcionario.setDataIngresso(linhaSplit[3]);
+						funcionario.setLogin(loginBanco);
+						funcionario.setSenha(senhaBanco);
+						funcionario.setSetor(linhaSplit[6]);
+						
+						return funcionario;
+					}
+
+					linha = reader.readLine();
+				}
+
+			} catch (Exception e) {
+				System.out.println("Erro: " + e.getMessage());
+			}
+
+		}
+
+		return funcionario;
+	}
+	
+	@Override
+	public int atualizaId() throws FileNotFoundException, IOException {
+		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\funcionarios.csv");
+		int matricula = 0;
+		
+		if (file.exists()) {
+			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+				String linha = reader.readLine();
+				linha = reader.readLine();
+				
+				while (linha != null) {
+					String[] linhaSplit = linha.split(";");
+					matricula = Integer.parseInt(linhaSplit[0]);
+					linha = reader.readLine();
+				}
+				
+			} catch (Exception e) {
+				System.out.println("Erro: " + e.getMessage());
+			}
+		}
+		
+		return ++matricula;
+	}
 }
-
-    

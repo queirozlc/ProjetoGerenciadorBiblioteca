@@ -26,13 +26,13 @@ public class Emprestimo {
         this.matriculaFuncionario = matriculaFuncionario;
         
         try {
-            this.dataEmprestimo = new SimpleDateFormat("dd/mm/yyyy").parse(dataEmprestimo);
+            this.dataEmprestimo = new SimpleDateFormat("dd/MM/yyyy").parse(dataEmprestimo);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         
         try {
-            this.dataDevolucao = new SimpleDateFormat("dd/mm/yyyy").parse(dataDevolucao);
+            this.dataDevolucao = new SimpleDateFormat("dd/MM/yyyy").parse(dataDevolucao);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -65,6 +65,10 @@ public class Emprestimo {
     public Date getDataEmprestimo() {
         return dataEmprestimo;
     }
+    
+    public String getDataEmprestimoFormatada() {
+    	return new SimpleDateFormat("dd/MM/yyyy").format(this.dataEmprestimo);
+    }
 
     public void setDataEmprestimo(Date dataEmprestimo) {
         this.dataEmprestimo = dataEmprestimo;
@@ -72,6 +76,10 @@ public class Emprestimo {
 
     public Date getDataDevolucao() {
         return dataDevolucao;
+    }
+    
+    public String getDataDevolucaoFormatada() {
+    	return new SimpleDateFormat("dd/MM/yyyy").format(this.dataDevolucao);
     }
 
     public void setDataDevolucao(Date dataDevolucao) {

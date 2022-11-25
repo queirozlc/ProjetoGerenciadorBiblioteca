@@ -12,6 +12,8 @@ public class Aluno extends Generic{
     
     private String curso;
     private double multa;
+    
+    public Aluno() {}
 
     public Aluno(int matricula, String nome, String endereco, String dataIngresso, String curso, double multa) {
         super(matricula, nome, endereco, dataIngresso);
@@ -19,11 +21,6 @@ public class Aluno extends Generic{
         this.multa = multa;
     }
 
-    public Aluno(int matricula, String nome, String endereco, String dataIngresso, String curso) {
-        super(matricula, nome, endereco, dataIngresso);
-        this.curso = curso;
-    }
-    
     public String getCurso() {
         return curso;
     }

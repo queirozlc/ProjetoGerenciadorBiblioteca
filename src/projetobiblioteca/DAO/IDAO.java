@@ -1,5 +1,6 @@
 package projetobiblioteca.DAO;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -7,10 +8,12 @@ import java.util.List;
  *
  * @author Lucas
  */
-public interface IDAO {
-    abstract void delete(int id);
+public interface IDAO<T> {    
+    abstract List<T> selectAll() throws FileNotFoundException, IOException;
     
-    abstract List<Object> selectAll();
+    abstract boolean insert(T t);
     
     abstract void criaDatabase() throws IOException;
+    
+    abstract int atualizaId() throws FileNotFoundException, IOException;
 }

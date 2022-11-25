@@ -65,8 +65,12 @@ public abstract class Generic {
         return new SimpleDateFormat("dd/MM/yyyy").format(this.dataIngresso);
     }
 
-    public void setDataIngresso(Date dataIngresso) {
-        this.dataIngresso = dataIngresso;
+    public void setDataIngresso(String dataIngresso) {
+        try {
+        	this.dataIngresso = new SimpleDateFormat("dd/MM/yyyy").parse(dataIngresso);
+		} catch (ParseException e) {
+			System.out.println("Formato de data inválido, tente novamente no formato dd/MM/yyyy!");
+		}
     }
 
     @Override

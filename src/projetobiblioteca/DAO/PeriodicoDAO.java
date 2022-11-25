@@ -11,8 +11,9 @@ import java.util.List;
 
 import projetobiblioteca.model.Periodico;
 
-public class PeriodicoDAO implements IDAO {
-
+public class PeriodicoDAO implements IDAO<Periodico> {
+	
+	@Override
 	public boolean insert(Periodico periodico) {
 		File arquivo = new File(
 				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\periodico.csv");
@@ -41,13 +42,7 @@ public class PeriodicoDAO implements IDAO {
 	}
 
 	@Override
-	public void delete(int id) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public List<Object> selectAll() {
+	public List<Periodico> selectAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}

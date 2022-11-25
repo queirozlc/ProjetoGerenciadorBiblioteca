@@ -8,6 +8,8 @@ package projetobiblioteca.model;
 public class Professor extends Generic{
     
     private String setor;
+    
+    public Professor() {}
 
     public Professor(int matricula, String nome, String endereco, String dataIngresso, String setor) {
         super(matricula, nome, endereco, dataIngresso);

@@ -1,9 +1,16 @@
 package projetobiblioteca.controller.helper;
 
+import projetobiblioteca.DAO.FuncionarioDAO;
 import projetobiblioteca.model.Funcionario;
 import projetobiblioteca.view.Main;
 
 public class LoginHelper implements IHelper {
+
+	private final FuncionarioDAO funcionarioDAO;
+
+	public LoginHelper() {
+		this.funcionarioDAO = new FuncionarioDAO();
+	}
 
 	@Override
 	public Object buscarModelo() {
@@ -21,16 +28,26 @@ public class LoginHelper implements IHelper {
 		return funcionario;
 	}
 
-	public void validaCampos(String usuario, String senha) {
-		if (usuario.isEmpty()) {
-			System.out.println("Preencha o campo usuário !");
+	public boolean validaCampos(Funcionario funcionario) {
+		/*
+		if (funcionario == null || funcionario.getLogin() == null && funcionario.getSenha() == null) {
+			System.out.println("Login ou senha não existem !");
+			
+		} else if (funcionario != null && funcionario.getLogin() != null && !funcionario.getLogin().isEmpty()
+				&& funcionario.getSenha().isEmpty()) {
+			System.out.println("Preencha o campo de senha !");
 
-		} else if (senha.isEmpty()) {
-			System.out.println("Preencha o campo senha !");
+		} else if (funcionario != null && funcionario.getSenha() != null && !funcionario.getSenha().isEmpty()
+				&& funcionario.getLogin().isEmpty()) {
+			System.out.println("Preencha o campo login !");
 
-		} else if (usuario.isEmpty() && senha.isEmpty()) {
-			System.out.println("Preencha todos os campos!");
+		} else if (funcionario != null && funcionario.getSenha() == null
+				|| funcionario.getSenha().isEmpty() && funcionario.getLogin() == null
+				|| funcionario.getLogin().isEmpty()) {
+			System.out.println("Preencha todos os campos !");
 		}
+*/
+		return funcionario != null && funcionario.getLogin() != null && !funcionario.getLogin().isEmpty()
+				&& funcionario.getSenha() != null && !funcionario.getSenha().isEmpty();
 	}
-
 }

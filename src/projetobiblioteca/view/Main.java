@@ -9,6 +9,7 @@ import java.util.Scanner;
 import projetobiblioteca.controller.CriarContaController;
 import projetobiblioteca.controller.LoginController;
 import projetobiblioteca.controller.MenuPrincipalController;
+import projetobiblioteca.model.Aluno;
 import projetobiblioteca.model.Funcionario;
 import projetobiblioteca.model.Livro;
 import projetobiblioteca.model.Periodico;
@@ -18,6 +19,7 @@ public class Main {
 
 	private static final Locale localePtBr = new Locale("pt", "BR");
 	private static Scanner scanner = new Scanner(System.in).useLocale(localePtBr);
+	private static Funcionario funcionarioLogado;
 
 	public static void main(String[] args) throws IOException {
 		Funcionario funcionario = null;
@@ -43,15 +45,18 @@ public class Main {
 
 				funcionario = (Funcionario) loginController.getHelper().buscarModelo();
 
-				if (loginController.entrarNoSistema(funcionario.getLogin(), funcionario.getSenha())) {
-					System.out.println("-----------------------------------------------------");
-					System.out.println("Login feito com sucesso !");
+				if (loginController.entrarNoSistema(funcionario)) {
 					// muda opçao escolhida para sair do while
 					opcaoEscolhida = '0';
 					opcaoEscolhidaMenu = '1';
-				}
 
-				loginController.getHelper().validaCampos(funcionario.getLogin(), funcionario.getSenha());
+					// Seta atributo para guardar funcionario logado
+					funcionarioLogado = loginController.getFuncionarioDAO()
+							.buscaUsuarioPorLoginESenha(funcionario.getLogin(), funcionario.getSenha());
+					System.out.println("-----------------------------------------------------");
+					System.out.println("Login feito com sucesso !");
+
+				}
 				break;
 
 			// Criar conta
@@ -62,11 +67,12 @@ public class Main {
 
 				// Chamando metodo do controller
 				if (criarContaController.criarConta(funcionario)) {
-					System.out.println("-----------------------------------------------------");
-					System.out.println("Funcionário cadastrado com sucesso !");
-
 					// muda opçao escolhida para sair do while
 					opcaoEscolhida = '0';
+					// Seta atributo para guardar funcionario logado
+					funcionarioLogado = funcionario;
+					System.out.println("-----------------------------------------------------");
+					System.out.println("Funcionário cadastrado com sucesso !");
 				}
 
 				break;
@@ -135,21 +141,67 @@ public class Main {
 				case 2:
 					// Valida o usuário a ser cadastrado
 					int escolhaUsuario;
-					
+
 					System.out.print("Digite 1 se o usuário for professor ou 2 se o usuário for aluno: ");
 					escolhaUsuario = scanner.nextInt();
 					scanner.nextLine();
-					
+
 					// cadastro de professor
 					if (escolhaUsuario == 1) {
-						
+
 						// busca modelo da tela
-						Professor professor = (Professor) menuPrincipalController.getHelper().buscarModeloUsuario(escolhaUsuario);
-						
+						Professor professor = (Professor) menuPrincipalController.getHelper()
+								.buscarModeloUsuario(escolhaUsuario);
+
 						if (menuPrincipalController.cadastraUsuario(professor)) {
 							System.out.println("-----------------------------------------------------");
 							System.out.println("Professor Cadastrado com sucesso !");
 						}
+
+					} else if (escolhaUsuario == 2) {
+
+						Aluno aluno = (Aluno) menuPrincipalController.getHelper().buscarModeloUsuario(escolhaUsuario);
+
+						if (menuPrincipalController.cadastraUsuario(aluno)) {
+							System.out.println("-----------------------------------------------------");
+							System.out.println("Aluno Cadastrado com sucesso !");
+						}
+					}
+					break;
+
+				// Emprestimo
+				case 3:
+					System.out.print("Informe 1 se o empréstimo for para professor ou 2 se for para aluno: ");
+					int escolhaEmprestimo = scanner.nextInt();
+					scanner.nextLine();
+
+					if (escolhaEmprestimo == 1) {
+						// Lista todos os usuários professores para escolher a matrícula
+						menuPrincipalController.getHelper().listarUsuariosCadastrados(escolhaEmprestimo);
+						System.out.print("Informe a matricula do professor: ");
+						int matricula = scanner.nextInt();
+						scanner.nextLine();
+
+						if (menuPrincipalController.cadastraEmprestimo(funcionarioLogado.getMatricula(), matricula,
+								escolhaEmprestimo)) {
+							System.out.println("-----------------------------------------------------");
+							System.out.println("Emprestimo cadastrado Cadastrado com sucesso !");
+						}
+
+					} else if (escolhaEmprestimo == 2) {
+						// Lista todos os usuários alunos para escolher a matrícula
+						menuPrincipalController.getHelper().listarUsuariosCadastrados(escolhaEmprestimo);
+						System.out.print("Informe a matrícula do aluno: ");
+						int matriculaAluno = scanner.nextInt();
+						scanner.nextLine();
+
+						if (menuPrincipalController.cadastraEmprestimo(funcionarioLogado.getMatricula(), matriculaAluno,
+								escolhaEmprestimo)) {
+							System.out.println("-----------------------------------------------------");
+							System.out.println("Emprestimo cadastrado Cadastrado com sucesso !");
+						}
+					}else {
+						System.out.println("Essa não é uma opção válida, tente novamente!");
 					}
 					break;
 
