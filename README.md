@@ -1,4 +1,4 @@
-<h1 align = "center" weight="bold"> ============== ARQUITETURA MVC ============== </h1>
+<h1 align = "center" weight="bold"> ====== ARQUITETURA MVC ====== </h1>
 <br/>
 	
 <p align = "center">
