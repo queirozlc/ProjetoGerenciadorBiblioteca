@@ -191,37 +191,98 @@ public class MenuPrincipalHelper {
 
 	public void listarUsuariosCadastrados(int opcao) {
 		
-		try {
-			if (opcao == 1) {
-				List<Professor> listaProfessores = professorDAO.selectAll();
+		if (opcao == 1) {
+			List<Professor> listaProfessores = professorDAO.selectAll();
 
-				if (listaProfessores != null && !listaProfessores.isEmpty()) {
-					System.out.println("\n############### LISTA DE PROFESSORES CADASTRADOS ###############");
-					for (Professor professor : listaProfessores) {
-						System.out.println("===================================================================");
-						System.out.println("Matrícula: " + professor.getMatricula());
-						System.out.println("Nome: " + professor.getNome());
-					}
-				}
-
-			} else if (opcao == 2) {
-				List<Aluno> listaAlunos = alunoDAO.selectAll();
-				
-				if (listaAlunos != null && !listaAlunos.isEmpty()) {
-					System.out.println("\n############### LISTA DE ALUNOS CADASTRADOS ###############");
-					
-					for (Aluno aluno : listaAlunos) {
-						System.out.println("===================================================================");
-						System.out.println("Matrícula: " + aluno.getMatricula());
-						System.out.println("Nome: " + aluno.getNome());
-					}
+			if (listaProfessores != null && !listaProfessores.isEmpty()) {
+				System.out.println("\n############### LISTA DE PROFESSORES CADASTRADOS ###############");
+				for (Professor professor : listaProfessores) {
+					System.out.println("===================================================================");
+					System.out.println("Matrícula: " + professor.getMatricula());
+					System.out.println("Nome: " + professor.getNome());
 				}
 			}
-		} catch (IOException e) {
-			System.out.println("Erro: " + e.getMessage());
+
+		} else if (opcao == 2) {
+			List<Aluno> listaAlunos = alunoDAO.selectAll();
+			
+			if (listaAlunos != null && !listaAlunos.isEmpty()) {
+				System.out.println("\n############### LISTA DE ALUNOS CADASTRADOS ###############");
+				
+				for (Aluno aluno : listaAlunos) {
+					System.out.println("===================================================================");
+					System.out.println("Matrícula: " + aluno.getMatricula());
+					System.out.println("Nome: " + aluno.getNome());
+				}
+			}
 		}
 
 	}
-	
-	
+
+
+	public int listaAlunosCadastrados() {
+		int matricula = 0;
+		List<Aluno> listaAlunos = alunoDAO.selectAll();
+		
+		if (listaAlunos != null && !listaAlunos.isEmpty()) {
+			System.out.println("\n############### IMPRIMIR MULTA INDIVIDUAL DE ALUNOS CADASTRADOS ###############");
+			
+			for (Aluno aluno : listaAlunos) {
+				System.out.println("===================================================================");
+				System.out.println("Matrícula: " + aluno.getMatricula());
+				System.out.println("Nome: " + aluno.getNome());
+			}
+			
+			System.out.print("Informe a matrícula do aluno escolhido: ");
+			matricula = Main.getScanner().nextInt();
+			Main.getScanner().nextLine();
+		}
+		
+		return matricula;
+	}
+
+
+	public int listaItensCadastrados(int escolhaItemEmprestimo) {
+		int idItem = 0;
+		List<Livro> listaLivros;
+		List<Periodico> listaPeriodicos;
+		// escolha por livro
+		if (escolhaItemEmprestimo == 1) {
+			listaLivros = livroDAO.selectAll();
+			
+			if (listaLivros != null && !listaLivros.isEmpty()) {
+				System.out.println("\n############### LISTA DE LIVROS CADASTRADOS ###############");
+				
+				for (Livro livro : listaLivros) {
+					System.out.println("===================================================================");
+					System.out.println("ID: " + livro.getId());
+					System.out.println("Titulo: " + livro.getTitulo());
+				}
+				
+				System.out.print("Informe o id do livro escolhido: ");
+				idItem = Main.getScanner().nextInt();
+				Main.getScanner().nextLine();
+			}
+			
+		} else {
+			listaPeriodicos = periodicoDAO.selectAll();
+			
+			if (listaPeriodicos != null && !listaPeriodicos.isEmpty()) {
+				System.out.println("\n############### LISTA DE PERIODICOS CADASTRADOS ###############");
+				
+				for (Periodico periodico : listaPeriodicos) {
+					System.out.println("===================================================================");
+					System.out.println("ID: " + periodico.getId());
+					System.out.println("Titulo: " + periodico.getTitulo());
+				}
+				
+				System.out.print("Informe o id do periodico escolhido: ");
+				idItem = Main.getScanner().nextInt();
+				Main.getScanner().nextLine();
+			}
+		}
+		
+		
+		return idItem;
+	}
 }

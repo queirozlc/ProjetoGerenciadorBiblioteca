@@ -172,31 +172,58 @@ public class Main {
 				// Emprestimo
 				case 3:
 					System.out.print("Informe 1 se o empréstimo for para professor ou 2 se for para aluno: ");
-					int escolhaEmprestimo = scanner.nextInt();
+					int escolhaUsuarioEmprestimo = scanner.nextInt(), idItemEmprestimo = 0;
 					scanner.nextLine();
-
-					if (escolhaEmprestimo == 1) {
+					
+					
+					// Professor
+					if (escolhaUsuarioEmprestimo == 1) {
 						// Lista todos os usuários professores para escolher a matrícula
-						menuPrincipalController.getHelper().listarUsuariosCadastrados(escolhaEmprestimo);
+						menuPrincipalController.getHelper().listarUsuariosCadastrados(escolhaUsuarioEmprestimo);
 						System.out.print("Informe a matricula do professor: ");
 						int matricula = scanner.nextInt();
 						scanner.nextLine();
-
+						
+						// Lista os livros ou periódicos cadastrados
+						System.out.print("Informe 1 se o item do empréstimo for um livro ou 2 se for periódico: ");
+						int escolhaItemEmprestimo = scanner.nextInt();
+						scanner.nextLine();
+						
+						if (escolhaItemEmprestimo == 1 || escolhaItemEmprestimo == 2) {
+							idItemEmprestimo = menuPrincipalController.getHelper().listaItensCadastrados(escolhaItemEmprestimo);
+						}else {
+							System.out.println("Opção inválida, tente novamente!");
+						}
+						
 						if (menuPrincipalController.cadastraEmprestimo(funcionarioLogado.getMatricula(), matricula,
-								escolhaEmprestimo)) {
+								escolhaUsuarioEmprestimo, idItemEmprestimo)) {
 							System.out.println("-----------------------------------------------------");
 							System.out.println("Emprestimo cadastrado Cadastrado com sucesso !");
 						}
-
-					} else if (escolhaEmprestimo == 2) {
+						
+						
+						// Aluno
+					} else if (escolhaUsuarioEmprestimo == 2) {
 						// Lista todos os usuários alunos para escolher a matrícula
-						menuPrincipalController.getHelper().listarUsuariosCadastrados(escolhaEmprestimo);
+						menuPrincipalController.getHelper().listarUsuariosCadastrados(escolhaUsuarioEmprestimo);
 						System.out.print("Informe a matrícula do aluno: ");
 						int matriculaAluno = scanner.nextInt();
 						scanner.nextLine();
-
+						
+						// Lista os livros ou periódicos cadastrados
+						System.out.print("Informe 1 se o item do empréstimo for um livro ou 2 se for periódico: ");
+						int escolhaItemEmprestimo = scanner.nextInt();
+						scanner.nextLine();
+						
+						if (escolhaItemEmprestimo == 1 || escolhaItemEmprestimo == 2) {
+							idItemEmprestimo = menuPrincipalController.getHelper().listaItensCadastrados(escolhaItemEmprestimo);
+						}else {
+							System.out.println("Opção inválida, tente novamente!");
+						}
+						
+						// cadastra emprestimo
 						if (menuPrincipalController.cadastraEmprestimo(funcionarioLogado.getMatricula(), matriculaAluno,
-								escolhaEmprestimo)) {
+								escolhaUsuarioEmprestimo, idItemEmprestimo)) {
 							System.out.println("-----------------------------------------------------");
 							System.out.println("Emprestimo cadastrado Cadastrado com sucesso !");
 						}
@@ -204,7 +231,32 @@ public class Main {
 						System.out.println("Essa não é uma opção válida, tente novamente!");
 					}
 					break;
-
+					
+					// Emissão de relatórios
+				case 4:
+					int escolhaRelatorio;
+					
+					System.out.println("################### EMISSÃO DE RELATÓRIOS ###################");
+					System.out.println("1 - Relatório de Livros cadastrados.");
+					System.out.println("2 - Relatório de Periódicos cadastrados.");
+					System.out.println("3 - Relatório de empréstimos feitos.");
+					System.out.println("4 - Relatório de Funcionários cadastrados.");
+					System.out.println("5 - Relatório de Alunos cadastrados.");
+					System.out.println("6 - Impressão de multa individual.");
+					System.out.print("Informe a opção que você deseja: ");
+					escolhaRelatorio = scanner.nextInt();
+					scanner.nextLine();
+					
+					if (menuPrincipalController.gerarRelatorio(escolhaRelatorio)) {
+						System.out.println("-------------------------------------------");
+						System.out.println("Relatório gerado com sucesso na pasta 'Downloads'!");
+					
+					} else if (escolhaRelatorio < 1 || escolhaRelatorio > 6) {
+						System.out.println("Opção inválida, tente novamente !");
+					}
+					
+					break;
+					
 				case 0:
 					System.out.print("Finalizando programa...");
 					break;

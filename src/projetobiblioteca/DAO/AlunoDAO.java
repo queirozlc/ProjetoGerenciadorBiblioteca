@@ -15,12 +15,12 @@ import projetobiblioteca.model.Aluno;
 public class AlunoDAO implements IDAO<Aluno> {
 
 	@Override
-	public List<Aluno> selectAll() throws FileNotFoundException, IOException {
+	public List<Aluno> selectAll() {
 		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\aluno.csv");
 		List<Aluno> listaAlunos = new ArrayList<Aluno>();
 		Aluno aluno;
 		if (file.exists()) {
-			
+
 			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 				String linha = reader.readLine();
 				linha = reader.readLine();
@@ -33,11 +33,15 @@ public class AlunoDAO implements IDAO<Aluno> {
 					String dataIngresso = linhaSplit[3];
 					String curso = linhaSplit[4];
 					double multa = Double.valueOf(linhaSplit[5]);
-					
+
 					aluno = new Aluno(matricula, nome, endereco, dataIngresso, curso, multa);
 					listaAlunos.add(aluno);
 					linha = reader.readLine();
 				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -144,6 +148,60 @@ public class AlunoDAO implements IDAO<Aluno> {
 		}
 
 		return aluno;
+	}
+
+	@Override
+	public boolean existeRegistro() {
+		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\aluno.csv");
+
+		if (file.exists()) {
+
+			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+				String linha = reader.readLine();
+				linha = reader.readLine();
+
+				if (linha != null) {
+					return true;
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void geraRelatorio() {
+		File file = new File(System.getProperty("user.home") + "\\Downloads\\RelatorioAlunos.csv");
+		PrintWriter writer = null;
+		List<Aluno> listaAlunos = this.selectAll();
+
+		try {
+			if (!file.exists()) {
+				file.createNewFile();
+				FileWriter out = new FileWriter(file, true);
+				writer = new PrintWriter(out);
+				writer.println("Matricula;Nome;Endereco;Data de Ingresso;Curso");
+
+				for (Aluno aluno : listaAlunos) {
+					writer.write(aluno.getMatricula() + ";" + aluno.getNome() + ";" + aluno.getEndereco() + ";"
+							+ aluno.getDataFormatada() + ";" + aluno.getCurso() + "\n");
+				}
+				
+				writer.flush();
+			
+			} else {
+				System.out.println("Este arquivo já existe na pasta 'Downloads'.");
+			}
+			
+		} catch (IOException e) {
+			System.out.println("Erro ao criar arquivo de relatorio: " + e.getMessage());
+		
+		} finally {
+			writer.close();
+		}
 	}
 
 }

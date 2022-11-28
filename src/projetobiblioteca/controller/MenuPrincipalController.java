@@ -7,6 +7,7 @@ import java.util.Date;
 
 import projetobiblioteca.DAO.AlunoDAO;
 import projetobiblioteca.DAO.EmprestimoDAO;
+import projetobiblioteca.DAO.FuncionarioDAO;
 import projetobiblioteca.DAO.LivroDAO;
 import projetobiblioteca.DAO.PeriodicoDAO;
 import projetobiblioteca.DAO.ProfessorDAO;
@@ -29,6 +30,7 @@ public class MenuPrincipalController {
 	private final ProfessorDAO professorDAO;
 	private final AlunoDAO alunoDAO;
 	private final EmprestimoDAO emprestimoDAO;
+	private final FuncionarioDAO funcionarioDAO;
 
 	public MenuPrincipalController() {
 		this.helper = new MenuPrincipalHelper();
@@ -37,6 +39,7 @@ public class MenuPrincipalController {
 		this.professorDAO = new ProfessorDAO();
 		this.alunoDAO = new AlunoDAO();
 		this.emprestimoDAO = new EmprestimoDAO();
+		this.funcionarioDAO = new FuncionarioDAO();
 	}
 
 	public MenuPrincipalHelper getHelper() {
@@ -94,10 +97,12 @@ public class MenuPrincipalController {
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean cadastraEmprestimo(int matriculaFuncionario, int matriculaUsuario, int opcao) {
+	public boolean cadastraEmprestimo(int matriculaFuncionario, int matriculaUsuario, int opcao, int idItem) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Aluno aluno;
 		Professor professor;
+		Livro livro = null;
+		Periodico periodico = null;
 		Emprestimo emprestimo;
 		Date date = new Date();
 		String dataEmprestimo, dataDevolucao;
@@ -106,8 +111,10 @@ public class MenuPrincipalController {
 			switch (opcao) {
 			case 1:
 				professor = professorDAO.buscaPorId(matriculaUsuario);
-				
-				if (professor != null) {
+				livro = livroDAO.buscaPorId(idItem);
+				periodico = periodicoDAO.buscaPorId(idItem);
+
+				if (professor != null && livro != null || periodico != null) {
 					if (matriculaFuncionario > 0 && matriculaUsuario > 0) {
 						dataEmprestimo = dateFormat.format(date.getTime());
 
@@ -117,24 +124,27 @@ public class MenuPrincipalController {
 						// converte data para String
 						dataDevolucao = dateFormat.format(date);
 
-						emprestimo = new Emprestimo(emprestimoDAO.atualizaId(), matriculaUsuario, matriculaFuncionario,
-								dataEmprestimo, dataDevolucao);
+						emprestimo = new Emprestimo(emprestimoDAO.atualizaId(), matriculaUsuario, null,
+								matriculaFuncionario, livro != null ? livro.getId() : null,
+								periodico != null ? periodico.getId() : null, dataEmprestimo, dataDevolucao);
 
 						if (emprestimoDAO.insert(emprestimo)) {
 							return true;
 						}
 					}
 				} else {
-					System.out.println("Não existe professor com a matrícula informada");
+					System.out.println("Não foi possível realizar esse empréstimo: entrada de valores inválida.");
 				}
-				
+
 				break;
 
 			// Empréstimo para aluno
 			case 2:
 				aluno = alunoDAO.buscaPorId(matriculaUsuario);
+				livro = livroDAO.buscaPorId(idItem);
+				periodico = periodicoDAO.buscaPorId(idItem);
 
-				if (aluno != null) {
+				if (aluno != null && livro != null || periodico != null) {
 
 					if (aluno.getMulta() > 0) {
 						System.out.printf(
@@ -148,16 +158,19 @@ public class MenuPrincipalController {
 						// converte data para String
 						dataDevolucao = dateFormat.format(date);
 
-						emprestimo = new Emprestimo(emprestimoDAO.atualizaId(), matriculaUsuario, matriculaFuncionario,
-								dataEmprestimo, dataDevolucao);
+						emprestimo = new Emprestimo(emprestimoDAO.atualizaId(), null, matriculaUsuario,
+								matriculaFuncionario, livro != null ? livro.getId() : null,
+								periodico != null ? periodico.getId() : null, dataEmprestimo, dataDevolucao);
 
 						if (emprestimoDAO.insert(emprestimo)) {
 							return true;
 						}
 					}
 
+					break;
+
 				} else {
-					System.out.println("Não existe aluno com a matrícula informada");
+					System.out.println("Não foi possível realizar esse empréstimo: entrada de valores inválida.");
 				}
 				break;
 			default:
@@ -166,6 +179,73 @@ public class MenuPrincipalController {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	public boolean gerarRelatorio(int opcao) {
+
+		switch (opcao) {
+		case 1:
+			if (livroDAO.existeRegistro()) {
+				livroDAO.geraRelatorio();
+				return true;
+			} else {
+				System.out.println("Não existe registro cadastrado!");
+			}
+			break;
+
+		case 2:
+			if (periodicoDAO.existeRegistro()) {
+				periodicoDAO.geraRelatorio();
+				return true;
+			} else {
+				System.out.println("Não existe registro cadastrado!");
+			}
+			break;
+
+		case 3:
+
+			if (emprestimoDAO.existeRegistro()) {
+				emprestimoDAO.geraRelatorio();
+				return true;
+			} else {
+				System.out.println("Não existe registro cadastrado!");
+			}
+			break;
+
+		case 4:
+			if (funcionarioDAO.existeRegistro()) {
+				funcionarioDAO.geraRelatorio();
+				return true;
+			} else {
+				System.out.println("Não existe registro cadastrado!");
+			}
+			break;
+
+		case 5:
+
+			if (alunoDAO.existeRegistro()) {
+				alunoDAO.geraRelatorio();
+				return true;
+			} else {
+				System.out.println("Não existe registro cadastrado!");
+			}
+			break;
+
+		case 6:
+			// Necessita outro método para gerar relatorio das multas individuais.
+			if (alunoDAO.existeRegistro()) {
+				int matricula = this.helper.listaAlunosCadastrados();
+
+			} else {
+				System.out.println("Não existe registro cadastrado!");
+			}
+
+			break;
+		default:
+			break;
 		}
 
 		return false;

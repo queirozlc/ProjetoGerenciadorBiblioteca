@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package projetobiblioteca.model;
 
 import java.text.ParseException;
@@ -17,8 +14,7 @@ public class Livro extends GenericBiblioteca {
 	private String editora;
 	private Date anoPublicacao;
 
-	public Livro(int id, String autores, String titulo, char tipo, String issn, String editora,
-			String anoPublicacao) {
+	public Livro(int id, String autores, String titulo, char tipo, String issn, String editora, String anoPublicacao) {
 		super(id, autores, titulo, tipo, issn);
 		this.editora = editora;
 
@@ -45,7 +41,7 @@ public class Livro extends GenericBiblioteca {
 	public Date getAnoPublicacao() {
 		return anoPublicacao;
 	}
-	
+
 	public String getAnoPublicacaoFormatado() {
 		return new SimpleDateFormat("yyyy").format(this.anoPublicacao);
 	}

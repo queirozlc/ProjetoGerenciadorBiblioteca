@@ -13,101 +13,129 @@ import java.util.Date;
  * @author Lucas
  */
 public class Emprestimo {
-    
-    private int id;
-    private int matriculaCliente;
-    private int matriculaFuncionario;
-    private Date dataEmprestimo;
-    private Date dataDevolucao;
 
-    public Emprestimo(int id, int matriculaCliente, int matriculaFuncionario, String dataEmprestimo, String dataDevolucao) {
-        this.id = id;
-        this.matriculaCliente = matriculaCliente;
-        this.matriculaFuncionario = matriculaFuncionario;
-        
-        try {
-            this.dataEmprestimo = new SimpleDateFormat("dd/MM/yyyy").parse(dataEmprestimo);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        
-        try {
-            this.dataDevolucao = new SimpleDateFormat("dd/MM/yyyy").parse(dataDevolucao);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
+	private int id;
+	private Integer matriculaProfessor;
+	private Integer matriculaAluno;
+	private int matriculaFuncionario;
+	private Integer idLivro;
+	private Integer idPeriodico;
+	private Date dataEmprestimo;
+	private Date dataDevolucao;
 
-    public int getId() {
-        return id;
-    }
+	public Emprestimo(int id, Integer matriculaProfessor, Integer matriculaAluno, int matriculaFuncionario,
+			Integer idLivro, Integer idPeriodico, String dataEmprestimo, String dataDevolucao) {
+		this.id = id;
+		this.matriculaProfessor = matriculaProfessor;
+		this.matriculaAluno = matriculaAluno;
+		this.matriculaFuncionario = matriculaFuncionario;
+		this.idLivro = idLivro;
+		this.idPeriodico = idPeriodico;
+		try {
+			this.dataEmprestimo = new SimpleDateFormat("dd/MM/yyyy").parse(dataEmprestimo);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+		try {
+			this.dataDevolucao = new SimpleDateFormat("dd/MM/yyyy").parse(dataDevolucao);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public int getMatriculaCliente() {
-        return matriculaCliente;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setMatriculaCliente(int matriculaCliente) {
-        this.matriculaCliente = matriculaCliente;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public int getMatriculaFuncionario() {
-        return matriculaFuncionario;
-    }
+	public Integer getMatriculaProfessor() {
+		return matriculaProfessor;
+	}
 
-    public void setMatriculaFuncionario(int matriculaFuncionario) {
-        this.matriculaFuncionario = matriculaFuncionario;
-    }
+	public void setMatriculaProfessor(Integer matriculaProfessor) {
+		this.matriculaProfessor = matriculaProfessor;
+	}
 
-    public Date getDataEmprestimo() {
-        return dataEmprestimo;
-    }
-    
-    public String getDataEmprestimoFormatada() {
-    	return new SimpleDateFormat("dd/MM/yyyy").format(this.dataEmprestimo);
-    }
+	public Integer getMatriculaAluno() {
+		return matriculaAluno;
+	}
 
-    public void setDataEmprestimo(Date dataEmprestimo) {
-        this.dataEmprestimo = dataEmprestimo;
-    }
+	public void setMatriculaAluno(Integer matriculaAluno) {
+		this.matriculaAluno = matriculaAluno;
+	}
 
-    public Date getDataDevolucao() {
-        return dataDevolucao;
-    }
-    
-    public String getDataDevolucaoFormatada() {
-    	return new SimpleDateFormat("dd/MM/yyyy").format(this.dataDevolucao);
-    }
+	public Integer getIdLivro() {
+		return idLivro;
+	}
 
-    public void setDataDevolucao(Date dataDevolucao) {
-        this.dataDevolucao = dataDevolucao;
-    }
+	public void setIdLivro(Integer idLivro) {
+		this.idLivro = idLivro;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 61 * hash + this.id;
-        return hash;
-    }
+	public Integer getIdPeriodico() {
+		return idPeriodico;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Emprestimo other = (Emprestimo) obj;
-        return this.id == other.id;
-    }
-    
-    
-    
+	public void setIdPeriodico(Integer idPeriodico) {
+		this.idPeriodico = idPeriodico;
+	}
+
+	public int getMatriculaFuncionario() {
+		return matriculaFuncionario;
+	}
+
+	public void setMatriculaFuncionario(int matriculaFuncionario) {
+		this.matriculaFuncionario = matriculaFuncionario;
+	}
+
+	public Date getDataEmprestimo() {
+		return dataEmprestimo;
+	}
+
+	public String getDataEmprestimoFormatada() {
+		return new SimpleDateFormat("dd/MM/yyyy").format(this.dataEmprestimo);
+	}
+
+	public void setDataEmprestimo(Date dataEmprestimo) {
+		this.dataEmprestimo = dataEmprestimo;
+	}
+
+	public Date getDataDevolucao() {
+		return dataDevolucao;
+	}
+
+	public String getDataDevolucaoFormatada() {
+		return new SimpleDateFormat("dd/MM/yyyy").format(this.dataDevolucao);
+	}
+
+	public void setDataDevolucao(Date dataDevolucao) {
+		this.dataDevolucao = dataDevolucao;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 61 * hash + this.id;
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Emprestimo other = (Emprestimo) obj;
+		return this.id == other.id;
+	}
+
 }
