@@ -71,6 +71,55 @@ public class AlunoDAO implements IDAO<Aluno> {
 
 	}
 
+	public void updateMulta(Aluno aluno) {
+		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\aluno.csv");
+		List<Aluno> listaAlunos = this.selectAll();
+		PrintWriter writer = null;
+
+		if (file.exists()) {
+
+			try {
+				FileWriter out = new FileWriter(file);
+				writer = new PrintWriter(out);
+
+				if (listaAlunos != null && !listaAlunos.isEmpty()) {
+					for (Aluno alunoBanco : listaAlunos) {
+
+						if (alunoBanco.getMatricula() == aluno.getMatricula()) {
+							alunoBanco.setMulta(aluno.getMulta());
+							writer.println("Matricula;Nome;Endereco;Data de Ingresso;Curso;Multa");
+						}
+
+						writer.write(
+								alunoBanco.getMatricula() + ";" + alunoBanco.getNome() + ";"
+										+ alunoBanco.getEndereco()
+										+ ";"
+										+ alunoBanco.getDataFormatada() + ";" + alunoBanco.getCurso() + ";"
+										+ alunoBanco.getMulta()
+										+ "\n");
+					}
+					writer.flush();
+				} else {
+					System.out.println("Não existe nenhum aluno cadastrado.");
+				}
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+
+			} finally {
+				if (writer != null) {
+					writer.close();
+				}
+			}
+
+		} else {
+			System.out.println("Não existe nenhum aluno cadastrado.");
+		}
+	}
+
 	@Override
 	public int atualizaId() throws FileNotFoundException, IOException {
 		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\aluno.csv");
@@ -121,7 +170,7 @@ public class AlunoDAO implements IDAO<Aluno> {
 		return false;
 	}
 
-	public Aluno buscaPorId(int matriculaUsuario) throws FileNotFoundException, IOException {
+	public Aluno buscaPorId(int matriculaUsuario) {
 		File file = new File(System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\aluno.csv");
 		Aluno aluno = null;
 
@@ -144,6 +193,10 @@ public class AlunoDAO implements IDAO<Aluno> {
 					}
 					linha = reader.readLine();
 				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -189,18 +242,58 @@ public class AlunoDAO implements IDAO<Aluno> {
 					writer.write(aluno.getMatricula() + ";" + aluno.getNome() + ";" + aluno.getEndereco() + ";"
 							+ aluno.getDataFormatada() + ";" + aluno.getCurso() + "\n");
 				}
-				
+
 				writer.flush();
-			
+
 			} else {
 				System.out.println("Este arquivo já existe na pasta 'Downloads'.");
 			}
-			
+
 		} catch (IOException e) {
 			System.out.println("Erro ao criar arquivo de relatorio: " + e.getMessage());
-		
+
 		} finally {
 			writer.close();
+		}
+	}
+
+	public void geraRelatorioMultas(int matricula) {
+		File file = new File(System.getProperty("user.home") + "\\Downloads\\RelatorioMultas.csv");
+		PrintWriter writer = null;
+		Aluno aluno = this.buscaPorId(matricula);
+
+		if (aluno != null) {
+			try {
+				if (!file.exists() && aluno.getMulta() > 0) {
+					file.createNewFile();
+					FileWriter out = new FileWriter(file, true);
+					writer = new PrintWriter(out);
+
+					writer.println("Matricula;Nome;Multa");
+
+					writer.write(aluno.getMatricula() + ";" + aluno.getNome() + ";"
+							+ aluno.getMulta().toString().replace(".", ",") + "\n");
+
+					writer.flush();
+
+				} else if (!file.exists() && aluno.getMulta() == null || aluno.getMulta() == 0) {
+					System.out.println("Este aluno não possui multa");
+
+				} else if (file.exists()) {
+					System.out.println("Este arquivo já existe na pasta 'Downloads'.");
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+
+			} finally {
+				if (writer != null) {
+					writer.close();
+				}
+			}
+
+		} else {
+			System.out.println("Esse aluno não existe !");
 		}
 	}
 

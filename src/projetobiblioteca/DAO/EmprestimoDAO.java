@@ -170,11 +170,11 @@ public class EmprestimoDAO implements IDAO<Emprestimo> {
 				FileWriter out = new FileWriter(file, true);
 				writer = new PrintWriter(out);
 				writer.println(
-						"Matricula do Professor;Matricula do Aluno;Matricula do Funcionario;Id Livro;Id Periodico;Data de Emprestimo; Data de devolucao");
+						"Id;Matricula do Professor;Matricula do Aluno;Matricula do Funcionario;Id Livro;Id Periodico;Data de Emprestimo; Data de devolucao");
 
 				for (Emprestimo emprestimo : listaEmprestimos) {
 
-					writer.write(emprestimo.getMatriculaProfessor() + ";"
+					writer.write(emprestimo.getId() + ";" + emprestimo.getMatriculaProfessor() + ";"
 							+ emprestimo.getMatriculaAluno() + ";" + emprestimo.getMatriculaFuncionario() + ";"
 							+ emprestimo.getIdLivro() + ";" + emprestimo.getIdPeriodico() + ";"
 							+ emprestimo.getDataEmprestimoFormatada() + ";" + emprestimo.getDataDevolucaoFormatada()
@@ -192,6 +192,53 @@ public class EmprestimoDAO implements IDAO<Emprestimo> {
 		} finally {
 			writer.close();
 		}
+	}
+
+	public Emprestimo buscaPorId(int id) {
+		File file = new File(
+				System.getProperty("user.dir") + "\\src\\projetobiblioteca\\DAO\\database\\emprestimo.csv");
+		Emprestimo emprestimo = null;
+
+		if (file.exists()) {
+
+			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+				String linha = reader.readLine();
+				linha = reader.readLine();
+
+				while (linha != null) {
+					String[] linhaSplit = linha.split(";");
+					int idBanco = Integer.parseInt(linhaSplit[0]);
+					String matriculaProfessor = linhaSplit[1];
+					String matriculaAluno = linhaSplit[2];
+					int matriculaFuncionario = Integer.parseInt(linhaSplit[3]);
+					String idLivro = linhaSplit[4];
+					String idPeriodico = linhaSplit[5];
+					String dataEmprestimo = linhaSplit[6];
+					String dataDevolucao = linhaSplit[7];
+
+					if (idBanco == id) {
+						emprestimo = new Emprestimo(id,
+								!matriculaProfessor.equals("null") ? Integer.parseInt(matriculaProfessor) : null,
+								!matriculaAluno.equals("null") ? Integer.parseInt(matriculaAluno) : null,
+								matriculaFuncionario, !idLivro.equals("null") ? Integer.parseInt(idLivro) : null,
+								!idPeriodico.equals("null") ? Integer.parseInt(idPeriodico) : null, dataEmprestimo,
+								dataDevolucao);
+						return emprestimo;
+					}
+
+					linha = reader.readLine();
+				}
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		return emprestimo;
 	}
 
 }

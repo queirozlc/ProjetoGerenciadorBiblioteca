@@ -11,11 +11,11 @@ package projetobiblioteca.model;
 public class Aluno extends Generic{
     
     private String curso;
-    private double multa;
+    private Double multa;
     
     public Aluno() {}
 
-    public Aluno(int matricula, String nome, String endereco, String dataIngresso, String curso, double multa) {
+    public Aluno(int matricula, String nome, String endereco, String dataIngresso, String curso, Double multa) {
         super(matricula, nome, endereco, dataIngresso);
         this.curso = curso;
         this.multa = multa;
@@ -29,7 +29,7 @@ public class Aluno extends Generic{
         this.curso = curso;
     }
 
-    public double getMulta() {
+    public Double getMulta() {
         return multa;
     }
 

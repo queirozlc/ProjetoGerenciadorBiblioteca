@@ -1,13 +1,18 @@
 package projetobiblioteca.controller.helper;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import projetobiblioteca.DAO.AlunoDAO;
+import projetobiblioteca.DAO.EmprestimoDAO;
 import projetobiblioteca.DAO.LivroDAO;
 import projetobiblioteca.DAO.PeriodicoDAO;
 import projetobiblioteca.DAO.ProfessorDAO;
 import projetobiblioteca.model.Aluno;
+import projetobiblioteca.model.Devolucao;
+import projetobiblioteca.model.Emprestimo;
 import projetobiblioteca.model.Livro;
 import projetobiblioteca.model.Periodico;
 import projetobiblioteca.model.Professor;
@@ -23,15 +28,16 @@ public class MenuPrincipalHelper {
 	private final PeriodicoDAO periodicoDAO;
 	private final ProfessorDAO professorDAO;
 	private final AlunoDAO alunoDAO;
+	private final EmprestimoDAO emprestimoDAO;
 
 	public MenuPrincipalHelper() {
 		this.livroDAO = new LivroDAO();
 		this.periodicoDAO = new PeriodicoDAO();
 		this.professorDAO = new ProfessorDAO();
 		this.alunoDAO = new AlunoDAO();
+		this.emprestimoDAO = new EmprestimoDAO();
 	}
-	
-	
+
 	public boolean validaCampos(Object obj) {
 
 		// verifica tipo do objeto
@@ -190,7 +196,7 @@ public class MenuPrincipalHelper {
 	}
 
 	public void listarUsuariosCadastrados(int opcao) {
-		
+
 		if (opcao == 1) {
 			List<Professor> listaProfessores = professorDAO.selectAll();
 
@@ -205,10 +211,10 @@ public class MenuPrincipalHelper {
 
 		} else if (opcao == 2) {
 			List<Aluno> listaAlunos = alunoDAO.selectAll();
-			
+
 			if (listaAlunos != null && !listaAlunos.isEmpty()) {
 				System.out.println("\n############### LISTA DE ALUNOS CADASTRADOS ###############");
-				
+
 				for (Aluno aluno : listaAlunos) {
 					System.out.println("===================================================================");
 					System.out.println("Matrícula: " + aluno.getMatricula());
@@ -219,28 +225,26 @@ public class MenuPrincipalHelper {
 
 	}
 
-
 	public int listaAlunosCadastrados() {
 		int matricula = 0;
 		List<Aluno> listaAlunos = alunoDAO.selectAll();
-		
+
 		if (listaAlunos != null && !listaAlunos.isEmpty()) {
 			System.out.println("\n############### IMPRIMIR MULTA INDIVIDUAL DE ALUNOS CADASTRADOS ###############");
-			
+
 			for (Aluno aluno : listaAlunos) {
 				System.out.println("===================================================================");
 				System.out.println("Matrícula: " + aluno.getMatricula());
 				System.out.println("Nome: " + aluno.getNome());
 			}
-			
+
 			System.out.print("Informe a matrícula do aluno escolhido: ");
 			matricula = Main.getScanner().nextInt();
 			Main.getScanner().nextLine();
 		}
-		
+
 		return matricula;
 	}
-
 
 	public int listaItensCadastrados(int escolhaItemEmprestimo) {
 		int idItem = 0;
@@ -249,40 +253,63 @@ public class MenuPrincipalHelper {
 		// escolha por livro
 		if (escolhaItemEmprestimo == 1) {
 			listaLivros = livroDAO.selectAll();
-			
+
 			if (listaLivros != null && !listaLivros.isEmpty()) {
 				System.out.println("\n############### LISTA DE LIVROS CADASTRADOS ###############");
-				
+
 				for (Livro livro : listaLivros) {
 					System.out.println("===================================================================");
 					System.out.println("ID: " + livro.getId());
 					System.out.println("Titulo: " + livro.getTitulo());
 				}
-				
+
 				System.out.print("Informe o id do livro escolhido: ");
 				idItem = Main.getScanner().nextInt();
 				Main.getScanner().nextLine();
 			}
-			
+
 		} else {
 			listaPeriodicos = periodicoDAO.selectAll();
-			
+
 			if (listaPeriodicos != null && !listaPeriodicos.isEmpty()) {
 				System.out.println("\n############### LISTA DE PERIODICOS CADASTRADOS ###############");
-				
+
 				for (Periodico periodico : listaPeriodicos) {
 					System.out.println("===================================================================");
 					System.out.println("ID: " + periodico.getId());
 					System.out.println("Titulo: " + periodico.getTitulo());
 				}
-				
+
 				System.out.print("Informe o id do periodico escolhido: ");
 				idItem = Main.getScanner().nextInt();
 				Main.getScanner().nextLine();
 			}
 		}
-		
-		
+
 		return idItem;
+	}
+
+	public Devolucao buscarModeloDevolucao() {
+		Devolucao devolucao = null;
+		Emprestimo emprestimo;
+
+		// Realiza entrada dos dados
+		System.out.print("Informe o id do empréstimo: ");
+		int idEmprestimo = Main.getScanner().nextInt();
+		Main.getScanner().nextLine();
+
+		// Verifica se existe empréstimo com o id informado
+
+		emprestimo = emprestimoDAO.buscaPorId(idEmprestimo);
+
+		if (emprestimo != null) {
+			devolucao = new Devolucao(emprestimo, Main.getFuncionarioLogado().getMatricula(),
+					new SimpleDateFormat("dd/MM/yyyy").format(new Date().getTime()));
+
+		} else {
+			System.out.println("Não existe empréstimo cadastrado com esse id, tente novamente.");
+		}
+
+		return devolucao;
 	}
 }

@@ -1,2 +1,4 @@
 Id;Matricula do Professor;Matricula do Aluno;Matricula do Funcionario;Id Livro;Id Periodico;Data de Emprestimo;Data de Devolucao;
 1;null;1;2;1;1;28/11/2022;05/12/2022
+2;2;null;2;6;null;29/12/2022;05/01/2023
+3;null;2;2;2;2;29/12/2022;05/01/2023
